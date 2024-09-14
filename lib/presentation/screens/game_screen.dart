@@ -235,66 +235,57 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   Widget _grid() {
-    final size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: size.height * 0.53,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final double gridWidth = constraints.maxWidth;
-          final double gridHeight = constraints.maxHeight;
-      
-          return Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.deepPurple,
-              borderRadius: BorderRadius.circular(10)
-            ),
-            child: BlocConsumer<GameBloc, GameState>(
-              bloc: gameBloc,
-              listener: (context, state) {
-                if (state.winningPlayer != null) {
-                  winningPlayer();
-                }
-              },
-              builder: (context, state) {
-                // final positions = state.indexesWithMach?.map((position) => Offset(position, dy)).toList();
-                List<Offset> matchPositions = [
-                  Offset(0, 0),  // Primer elemento (fila 0, columna 0)
-                  Offset(1, 1),  // Segundo elemento (fila 1, columna 0)
-                  Offset(2, 2),  // Tercer elemento (fila 2, columna 0)
-                ];
-                return CustomPaint(
-                  painter: DrawLine(matchPositions),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: gridWidth / (size.height - gridHeight)
-                    ),
-                    itemCount: state.grid.length,
-                    itemBuilder: (context, index) {
-                      final bool match = state.indexesWithMach?.contains(index) ?? false;
-                      return _buttonTap(indexPosition: index, match: match);
-                    },
-                  ),
-                );
-              },
-            ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.53,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(10)
+      ),
+      child: BlocConsumer<GameBloc, GameState>(
+        bloc: gameBloc,
+        listener: (context, state) {
+          if (state.winningPlayer != null) winningPlayer();
+        },
+        builder: (context, state) {
+          final List<Widget> rows = []; 
+          for (int row = 0; row < 3; row++) {
+            rows.add(
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (int cell = 0; cell < 3; cell++) 
+                      Expanded(
+                        child: _buttonTap(
+                          position: Offset(row.toDouble(), 
+                          cell.toDouble()), 
+                          /// Si hay mach, verificar si la celda actual tiene la misma 
+                          /// posicion de una de la `positionsWithCombinations`.
+                          match: state.positionsWithCombinations?.any((test) => test == Offset(row.toDouble(), cell.toDouble())) ?? false
+                        )
+                      )
+                  ],  
+                ),
+              )
+            );
+          }
+
+          return CustomPaint(
+            foregroundPainter: state.positionsWithCombinations != null
+              ? DrawLine(state.positionsWithCombinations!)
+              : null,
+            child: Column(children: rows)
           );
         },
       ),
     );
   }
 
-  Widget _buttonTap({required int indexPosition, bool match = false}) {
-    final currentValue = gameBloc.state.grid[indexPosition];
+  Widget _buttonTap({required Offset position, bool match = false}) {
+    final currentValue = gameBloc.state.grid[position.dx.toInt()][position.dy.toInt()];
     final icon = Player(name: '', type: currentValue == TypePlayer.x.name ? TypePlayer.x : TypePlayer.o).icon;
-
     return AnimatedBuilder(
       animation: flickerAnimationController,
       child: InkWell(
@@ -303,7 +294,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         /// `gameBloc.state.winningPlayer` asegura que mientras se muestra el efecto 
         ///  de que hay un ganador no se pueda marcar una celda.
         onTap: currentValue == '' && gameBloc.state.winningPlayer == null ? () {
-          gameBloc.add(Play(gameBloc.state.currentlyPlaying, indexPosition));
+          gameBloc.add(Play(gameBloc.state.currentlyPlaying, position));
           timerController.reset();
         } : null,
         child: currentValue != '' 
@@ -316,12 +307,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         : null
       ),
       builder: (context, child) {
-        return Material(
-          borderRadius: BorderRadius.circular(10),
-          color: match 
-            ? flickerAnimation.value
-            :Colors.black.withOpacity(0.2),
-          child: child,
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Material(
+            borderRadius: BorderRadius.circular(10),
+            color: match 
+              ? flickerAnimation.value
+              :Colors.black.withOpacity(0.2),
+            child: child,
+          ),
         );
       },
     );
@@ -352,18 +346,22 @@ class DrawLine extends CustomPainter {
     ..color = Colors.white
     ..strokeWidth = 10;
 
+    final circular = Paint()
+    ..color = Colors.green;
+
     final start = _draw(positions[0], size);
     final end = _draw(positions[2], size);
-
     canvas.drawLine(start, end, myPaint);
+    canvas.drawCircle(start, 10, circular);
+    canvas.drawCircle(end, 10, circular);
   }
 
   Offset _draw(Offset position, Size size) {
     final cellWidth = size.width / 3;
     final cellheight = size.height / 3;
 
-    final x = position.dx * cellWidth + cellWidth / 2;
-    final y = position.dy * cellheight + cellheight / 2;
+    final x = position.dy * cellWidth + cellWidth / 2;
+    final y = position.dx * cellheight + cellheight / 2;
     return Offset(x, y);
   }
 

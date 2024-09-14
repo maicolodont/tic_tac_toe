@@ -14,17 +14,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AudioPlayer audioPlayer = AudioPlayer();
+  // final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    audioPlayer.setAudioSource(AudioSource.asset('assets/audios/button-press-2.wav'));
+    // audioPlayer.setAudioSource(AudioSource.asset('assets/audios/button-press-2.wav'));
   }
 
   @override
   void dispose() {
-    audioPlayer.dispose();
+    // audioPlayer.dispose();
     super.dispose();
   }
 
@@ -187,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           duration: duration,
                           durationSelected: durationSelected,
                           onSelected: (selected) {
-                            audioPlayer.seek(Duration.zero);
-                            audioPlayer.setVolume(0.5);
-                            audioPlayer.play();
+                            // audioPlayer.seek(Duration.zero);
+                            // audioPlayer.setVolume(0.5);
+                            // audioPlayer.play();
                             setState(() {
                               durationSelected = duration;
                             });

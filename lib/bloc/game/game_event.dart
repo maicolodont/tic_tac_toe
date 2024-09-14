@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/data/models/player.dart';
 
 sealed class GameEvent extends Equatable {
@@ -8,19 +9,19 @@ sealed class GameEvent extends Equatable {
 
 /// Cuando un jugador realiza una jugada.
 final class Play extends GameEvent {
-  Play(this.player, this.indexPosition);
+  Play(this.player, this.position);
   final Player player;
-  /// La posicion del indice en la cuadricula.
-  final int indexPosition;
+  /// La posicion en la cuadricula.
+  final Offset position;
 }
 
 final class ChangecurrentPlayer extends GameEvent {}
 
 final class WinningPlayer extends GameEvent {
-  WinningPlayer({required this.player, required this.indexesWithMach});
+  WinningPlayer({required this.player, required this.positionsWithCombinations});
   final Player player;
   /// Los indices de los mach cuando un jugador gana.
-  final List<int> indexesWithMach;
+  final List<Offset> positionsWithCombinations;
 }
 
 final class NewGame extends GameEvent {}

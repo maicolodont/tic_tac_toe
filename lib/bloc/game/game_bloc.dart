@@ -7,8 +7,8 @@ import 'package:tic_tac_toe/data/models/player.dart';
 import 'package:tic_tac_toe/utils/detect_winner.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  final AudioPlayer _audioButtonPress = AudioPlayer();
-  final AudioPlayer _audioWinning = AudioPlayer();
+  // final AudioPlayer _audioButtonPress = AudioPlayer();
+  // final AudioPlayer _audioWinning = AudioPlayer();
 
   GameBloc({required List<Player> players}) : 
     super(GameState(
@@ -24,29 +24,29 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _playEvent(Play event, Emitter<GameState> emit) {
     // Efecto al pulsar una celda.
-    _audioButtonPress.setAudioSource(AudioSource.asset('assets/audios/button-press.wav'));
-    _audioButtonPress.seek(Duration.zero);
-    _audioButtonPress.setVolume(0.5);
-    _audioButtonPress.play();
+    // _audioButtonPress.setAudioSource(AudioSource.asset('assets/audios/button-press.wav'));
+    // _audioButtonPress.seek(Duration.zero);
+    // _audioButtonPress.setVolume(0.5);
+    // _audioButtonPress.play();
 
-    List<String> gridUpdate = List.of( state.grid);
-    gridUpdate[event.indexPosition] = event.player.type.name;
-    final indexesWithMach = DetectWinner.cell9(gridUpdate);
+    final List<List<String>> gridUpdate = state.grid.map((toElement) => List<String>.of(toElement)).toList();
+    gridUpdate[event.position.dx.toInt()][event.position.dy.toInt()] = event.player.type.name;
+    final positionsWithCombinations = DetectWinner.cell9(gridUpdate);
 
     // Verificar si la grid esta llena (No hay un ganador) para hacer reset..
-    if (gridUpdate.every((test) => test != '')) {
+    if (gridUpdate.every((grid) => grid.every((cell) => cell != ''))) {
       add(NewGame());
       return;
     }
 
     // Hay un ganador.
-    if (indexesWithMach != null) {
-      add(WinningPlayer(player: state.currentlyPlaying, indexesWithMach: indexesWithMach));
+    if (positionsWithCombinations != null) {
+      add(WinningPlayer(player: state.currentlyPlaying, positionsWithCombinations: positionsWithCombinations));
     }
     
     emit(state.copyWith(
-        grid: gridUpdate, 
-        currentlyPlaying: indexesWithMach != null ? null : _changecurrentPlayer(),
+        grid: gridUpdate,
+        currentlyPlaying: positionsWithCombinations != null ? null : _changecurrentPlayer(),
       )
     );
   }
@@ -57,9 +57,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _winningPlayer(WinningPlayer event, Emitter<GameState> emit) {
     // Efecto cuando gana un jugador.
-    _audioWinning.setAudioSource(AudioSource.asset('assets/audios/winning-player.wav'));
-    _audioWinning.seek(Duration.zero);
-    _audioWinning.play();
+    // _audioWinning.setAudioSource(AudioSource.asset('assets/audios/winning-player.wav'));
+    // _audioWinning.seek(Duration.zero);
+    // _audioWinning.play();
 
     // Modifica la lista de las victoria y suma 1+ victoria al player ganador.
     final List<Map<Player, int>> winnersUpdate = state.winners.map((m) {
@@ -71,7 +71,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     emit(state.copyWith(
         winningPlayer: event.player,
-        indexesWithMach: event.indexesWithMach,
+        positionsWithCombinations: event.positionsWithCombinations,
         winners: winnersUpdate
       )
     );
@@ -82,7 +82,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         currentlyPlaying: _changecurrentPlayer(),
         grid: state.gridDfault,
         winningPlayer: null,
-        indexesWithMach: null
+        positionsWithCombinations: null
       )
     );
   }
@@ -92,8 +92,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   @override
   Future<void> close() {
-    _audioButtonPress.dispose();
-    _audioWinning.dispose();
+    // _audioButtonPress.dispose();
+    // _audioWinning.dispose();
     return super.close();
   }
 }

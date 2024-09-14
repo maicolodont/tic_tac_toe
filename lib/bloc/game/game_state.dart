@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/data/models/player.dart';
 
 class GameState extends Equatable {
@@ -6,8 +7,8 @@ class GameState extends Equatable {
     required List<Player> players,
     required this.currentlyPlaying,
     this.winningPlayer,
-    this.indexesWithMach,
-    List<String>? grid,
+    this.positionsWithCombinations,
+    List<List<String>>? grid,
     List<Map<Player, int>>? winners,
   }) : 
     assert(players.length == 2, "Game, can only have 2 players"),
@@ -16,9 +17,9 @@ class GameState extends Equatable {
     players = List.unmodifiable(players),
 
     grid = grid ?? const [
-      '','','',
-      '','','',
-      '','',''
+      ['', '',''],
+      ['', '',''],
+      ['', '',''],
     ],
 
     // Iniciamos los jugadores con 0 victorias si no hay ganadores.
@@ -33,13 +34,13 @@ class GameState extends Equatable {
   /// El player que acaba de ganar.
   final Player? winningPlayer;
   /// Los indices de los mach cuando un jugador gana.
-  final List<int>? indexesWithMach;
-  final List<String> grid;
+  final List<Offset>? positionsWithCombinations;
+  final List<List<String>> grid;
   /// El estado de la Grid de forma predeterminada (Vacia).
-  List<String> get gridDfault => List.unmodifiable([
-    '','','',
-    '','','',
-    '','',''
+  List<List<String>> get gridDfault => List.unmodifiable([
+    ['', '',''],
+    ['', '',''],
+    ['', '',''],
   ]);
 
   /// Retorna un mapa que contiene como `clave` un `Player` y un valor
@@ -49,8 +50,8 @@ class GameState extends Equatable {
   GameState copyWith({
     Player? currentlyPlaying,
     Player? winningPlayer,
-    List<String>? grid,
-    List<int>? indexesWithMach,
+    List<List<String>>? grid,
+    List<Offset>? positionsWithCombinations,
     List<Map<Player, int>>? winners,
   }) {
     return GameState(
@@ -58,7 +59,7 @@ class GameState extends Equatable {
       currentlyPlaying: currentlyPlaying ?? this.currentlyPlaying,
       winningPlayer: winningPlayer,
       grid: grid ?? this.grid,
-      indexesWithMach: indexesWithMach,
+      positionsWithCombinations: positionsWithCombinations,
       winners: winners ?? this.winners
     );
   }
@@ -69,7 +70,7 @@ class GameState extends Equatable {
     currentlyPlaying, 
     winningPlayer, 
     grid,
-    indexesWithMach,
+    positionsWithCombinations,
     winners
   ];
 }
