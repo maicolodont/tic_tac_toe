@@ -1,3 +1,17 @@
+// MIT License
+
+// Copyright (c) [2024] [maicolodont.dev]
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,17 +28,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    // audioPlayer.setAudioSource(AudioSource.asset('assets/audios/button-press-2.wav'));
+    audioPlayer.setAudioSource(AudioSource.asset('assets/audios/button-press-2.wav'));
   }
 
   @override
   void dispose() {
-    // audioPlayer.dispose();
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -145,6 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           scrollable: true,
           contentPadding: EdgeInsets.zero,
           content: Container(
+            constraints: const BoxConstraints(maxWidth: 300),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: 5),
@@ -167,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Gap(10),
                 Text(
-                  'Tiempo por jugada',
+                  'Tiempo por turno',
                   style: GoogleFonts.oxanium(
                     color: Colors.white,
                     fontSize: 25,
@@ -183,13 +198,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       spacing: 7,
                       children: durations.map((duration) {
                         return _chip(
-                          label: '00:${duration.inSeconds.toString().padLeft(2, '0')}',
+                          label: duration.inSeconds == 0 
+                            ? 'Sin límites'
+                            : '00:${duration.inSeconds.toString().padLeft(2, '0')}',
                           duration: duration,
                           durationSelected: durationSelected,
-                          onSelected: (selected) {
-                            // audioPlayer.seek(Duration.zero);
-                            // audioPlayer.setVolume(0.5);
-                            // audioPlayer.play();
+                          onSelected: (selected) async {
+                            await audioPlayer.seek(Duration.zero);
+                            await audioPlayer.setVolume(0.5);
+                            await audioPlayer.play();
                             setState(() {
                               durationSelected = duration;
                             });

@@ -1,3 +1,17 @@
+// MIT License
+
+// Copyright (c) [2024] [maicolodont.dev]
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:just_audio/just_audio.dart';
@@ -7,8 +21,8 @@ import 'package:tic_tac_toe/data/models/player.dart';
 import 'package:tic_tac_toe/utils/detect_winner.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  // final AudioPlayer _audioButtonPress = AudioPlayer();
-  // final AudioPlayer _audioWinning = AudioPlayer();
+  final AudioPlayer _audioButtonPress = AudioPlayer();
+  final AudioPlayer _audioWinning = AudioPlayer();
 
   GameBloc({required List<Player> players}) : 
     super(GameState(
@@ -24,10 +38,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _playEvent(Play event, Emitter<GameState> emit) {
     // Efecto al pulsar una celda.
-    // _audioButtonPress.setAudioSource(AudioSource.asset('assets/audios/button-press.wav'));
-    // _audioButtonPress.seek(Duration.zero);
-    // _audioButtonPress.setVolume(0.5);
-    // _audioButtonPress.play();
+    _audioButtonPress.setAudioSource(AudioSource.asset('assets/audios/button-press.wav'));
+    _audioButtonPress.seek(Duration.zero);
+    _audioButtonPress.setVolume(0.5);
+    _audioButtonPress.play();
 
     final List<List<String>> gridUpdate = state.grid.map((toElement) => List<String>.of(toElement)).toList();
     gridUpdate[event.position.dx.toInt()][event.position.dy.toInt()] = event.player.type.name;
@@ -57,9 +71,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _winningPlayer(WinningPlayer event, Emitter<GameState> emit) {
     // Efecto cuando gana un jugador.
-    // _audioWinning.setAudioSource(AudioSource.asset('assets/audios/winning-player.wav'));
-    // _audioWinning.seek(Duration.zero);
-    // _audioWinning.play();
+    _audioWinning.setAudioSource(AudioSource.asset('assets/audios/winning-player.wav'));
+    _audioWinning.seek(Duration.zero);
+    _audioWinning.play();
 
     // Modifica la lista de las victoria y suma 1+ victoria al player ganador.
     final List<Map<Player, int>> winnersUpdate = state.winners.map((m) {
@@ -92,8 +106,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   @override
   Future<void> close() {
-    // _audioButtonPress.dispose();
-    // _audioWinning.dispose();
+    _audioButtonPress.dispose();
+    _audioWinning.dispose();
     return super.close();
   }
 }

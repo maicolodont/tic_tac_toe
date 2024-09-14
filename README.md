@@ -1,16 +1,33 @@
-# tic_tac_toe
+# Tic Tac Toe
 
-A new Flutter project.
+¡Hola, comunidad de Flutter! 👋
 
-## Getting Started
+He creado este juego de Tic Tac Toe en Flutter y estoy muy emocionado de compartirlo con ustedes. Este proyecto fue un pequeño reto que hice en mi tiempo libre, y pensé que sería genial compartir el código para que puedan crear su propia versión o usar esta como base.
 
-This project is a starting point for a Flutter application.
+## Descripción del proyecto
 
-A few resources to get you started if this is your first Flutter project:
+Este es un clásico juego de Tic Tac Toe (Tres en Raya) construido con Flutter. Puedes jugar con dos jugadores de forma local. El objetivo es hacer coincidir tres marcas en línea recta, ya sea horizontal, vertical o diagonalmente, antes que tu oponente.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Características
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Juego para 2 jugadores local.
+- Trazado de línea con CustomPaint.
+- Agregar tiempo por turno.
+- algoritmo de match de 9 celdas.
+- Responsive: Se adapta a diferentes tamaños de pantalla.
+- Código limpio y modular.
+- Efectos de audio.
+- Fácil de entender y modificar.
+
+## Capturas de pantalla
+
+| ![Screenshot_1726334296](https://github.com/user-attachments/assets/cd9b5449-81fc-4d55-86e6-8e93e84355be) | ![Screenshot_1726334027](https://github.com/user-attachments/assets/6c8d7711-213f-4543-91a8-3497ca389f61) |
+|:--:|:--:|
+| Imagen 1 | Imagen 2 |
+
+## Instalación
+
+1. Clona este repositorio:
+
+   ```bash
+   git clone https://github.com/maicolodont/tic_tac_toe
