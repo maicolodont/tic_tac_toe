@@ -13,9 +13,9 @@
 // copies or substantial portions of the Software.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:tic_tac_toe/providers/timer_controller.dart';
+import 'package:tic_tac_toe/bloc/cubits/timer_controller.dart';
 import 'package:uicons_pro/uicons_pro.dart';
 
 class TimerWidget extends StatelessWidget {
@@ -43,26 +43,22 @@ class TimerWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: ChangeNotifierProvider(
-        create: (context) => controller,
-        builder: (_,__) {
-          return Consumer<TimerController>(
-            builder: (_,value, __) {
-              return value.seconds > 0 
-                ? Text(
-                  '00:${value.remainingTime.toString().padLeft(2, '0')}',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.oxanium(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800
-                  ),
-                )
-              : Icon(UIconsPro.boldRounded.infinity, color: Colors.white, size: 40);
-            },
-          );
+      child: BlocBuilder<TimerController, int>(
+        bloc: controller,
+        builder: (context, state) {
+          return controller.seconds > 0 
+            ? Text(
+              '00:${state.toString().padLeft(2, '0')}',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.oxanium(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.w800
+              ),
+            )
+          : Icon(UIconsPro.boldRounded.infinity, color: Colors.white, size: 40);
         },
-      ),
+      )
     );
   }
 }

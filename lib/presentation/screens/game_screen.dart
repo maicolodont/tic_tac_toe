@@ -18,12 +18,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tic_tac_toe/bloc/cubits/timer_controller.dart';
 import 'package:tic_tac_toe/bloc/game/game_bloc.dart';
 import 'package:tic_tac_toe/bloc/game/game_event.dart';
 import 'package:tic_tac_toe/bloc/game/game_state.dart';
 import 'package:tic_tac_toe/data/models/player.dart';
 import 'package:tic_tac_toe/presentation/widgets/timer.dart';
-import 'package:tic_tac_toe/providers/timer_controller.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, this.duration});
@@ -83,7 +83,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     arrowAnimationController.dispose();
-    timerController.cancel();
+    timerController.close();
     flickerAnimationController.dispose();
     gameBloc.close();
     super.dispose();
